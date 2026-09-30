@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using YearInReview.Extensions.Composite;
 using YearInReview.Extensions.GameActivity;
+using YearInReview.Extensions.PlaytimeInsights;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Aggregators;
 using YearInReview.Model.Filters;
@@ -147,7 +149,8 @@ namespace YearInReview
 						this,
 						Api,
 						new ReportPersistence(GetPluginUserDataPath()),
-						new GameActivityExtension(Api.Paths.ExtensionsDataPath),
+						GetActivityExtension(),
+						new PlaytimeInsightsExtension(Api.Paths.ExtensionsDataPath),
 						new DateTimeProvider());
 
 					_initValidationErrors = await extensionStartupValidator.IsOkToRun();
@@ -242,14 +245,14 @@ namespace YearInReview
 				playtimeCalendarAggregator,
 				hourlyPlaytimeAggregator,
 				addedGamesAggregator);
-			var gameActivityExtension = new GameActivityExtension(Api.Paths.ExtensionsDataPath);
+			var activityExtension = GetActivityExtension();
 			var specificYearActivityFilter = new SpecificYearActivityFilter();
 			var reportPersistence = new ReportPersistence(GetPluginUserDataPath());
 			var emptyActivityFilter = new EmptyActivityFilter();
 			var reportGenerator = new ReportGenerator(
 				Api,
 				dateTimeProvider,
-				gameActivityExtension,
+				activityExtension,
 				specificYearActivityFilter,
 				emptyActivityFilter,
 				composer);
@@ -257,6 +260,13 @@ namespace YearInReview
 			_reportManager.ReportsGenerated += ShowReportsGeneratedNotification;
 
 			return _reportManager;
+		}
+
+		private IGameActivityExtension GetActivityExtension()
+		{
+			return new CompositeActivityExtension(
+				new GameActivityExtension(Api.Paths.ExtensionsDataPath),
+				new PlaytimeInsightsExtension(Api.Paths.ExtensionsDataPath));
 		}
 
 		private void OpenReportsDialog()

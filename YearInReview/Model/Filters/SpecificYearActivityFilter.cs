@@ -22,7 +22,8 @@ namespace YearInReview.Model.Filters
 					IdConfiguration = i.IdConfiguration,
 					PlatformIDs = i.PlatformIDs,
 					PlatfromId = i.PlatfromId,
-					SourceId = i.SourceId
+					SourceId = i.SourceId,
+					SourceName = i.SourceName
 				}).ToList()
 			}).Where(x => x.Items.Any()).ToList();
 		}

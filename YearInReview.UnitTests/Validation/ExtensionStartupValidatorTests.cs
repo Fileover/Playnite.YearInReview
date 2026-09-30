@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using TestTools.Shared;
 using Xunit;
 using YearInReview.Extensions.GameActivity;
+using YearInReview.Extensions.PlaytimeInsights;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Reports.Persistence;
 using YearInReview.Settings;
@@ -25,6 +26,7 @@ namespace YearInReview.UnitTests.Validation
 		private readonly IAddons _addons;
 		private readonly IReportPersistence _reportPersistence;
 		private readonly IGameActivityExtension _gameActivityExtension;
+		private readonly IPlaytimeInsightsExtension _playtimeInsightsExtension;
 		private readonly IDateTimeProvider _dateTimeProvider;
 		private readonly YearInReviewSettings _settings;
 		private readonly List<Plugin> _loadedPlugins;
@@ -41,6 +43,8 @@ namespace YearInReview.UnitTests.Validation
 			_addons = fixture.Freeze<IAddons>();
 			_reportPersistence = fixture.Freeze<IReportPersistence>();
 			_gameActivityExtension = fixture.Freeze<IGameActivityExtension>();
+			_playtimeInsightsExtension = fixture.Freeze<IPlaytimeInsightsExtension>();
+			A.CallTo(() => _playtimeInsightsExtension.IsDataAvailable()).Returns(false);
 			_dateTimeProvider = fixture.Freeze<IDateTimeProvider>();
 			_settings = fixture.Create<YearInReviewSettings>();
 			_loadedPlugins = fixture.Create<List<TestablePlugin>>().Cast<Plugin>().ToList();

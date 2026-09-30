@@ -31,7 +31,8 @@ namespace YearInReview.Extensions.GameActivity
 						IdConfiguration = session.IdConfiguration,
 						PlatformIDs = session.PlatformIDs,
 						PlatfromId = session.PlatfromId,
-						SourceId = session.SourceId
+						SourceId = session.SourceId,
+						SourceName = session.SourceName
 					};
 
 					secondsRemaining -= secondsInSession;
@@ -67,7 +68,8 @@ namespace YearInReview.Extensions.GameActivity
 						IdConfiguration = session.IdConfiguration,
 						PlatformIDs = session.PlatformIDs,
 						PlatfromId = session.PlatfromId,
-						SourceId = session.SourceId
+						SourceId = session.SourceId,
+						SourceName = session.SourceName
 					};
 					secondsRemaining -= secondsInSession;
 					startTime = startTime.AddSeconds(secondsInSession);

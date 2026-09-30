@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using YearInReview.Extensions.GameActivity;
+using YearInReview.Extensions.PlaytimeInsights;
 using YearInReview.Infrastructure.Services;
 using YearInReview.Model.Reports.Persistence;
 using YearInReview.Settings;
@@ -16,20 +17,23 @@ namespace YearInReview.Validation
 		private readonly IYearInReview _plugin;
 		private readonly IPlayniteAPI _playniteApi;
 		private readonly IReportPersistence _reportPersistence;
-		private readonly IGameActivityExtension _gameActivityExtension;
+		private readonly IGameActivityExtension _activityExtension;
+		private readonly IPlaytimeInsightsExtension _playtimeInsightsExtension;
 		private readonly IDateTimeProvider _dateTimeProvider;
 
 		public ExtensionStartupValidator(
 			IYearInReview plugin,
 			IPlayniteAPI playniteApi,
 			IReportPersistence reportPersistence,
-			IGameActivityExtension gameActivityExtension,
+			IGameActivityExtension activityExtension,
+			IPlaytimeInsightsExtension playtimeInsightsExtension,
 			IDateTimeProvider dateTimeProvider)
 		{
 			_plugin = plugin;
 			_playniteApi = playniteApi;
 			_reportPersistence = reportPersistence;
-			_gameActivityExtension = gameActivityExtension;
+			_activityExtension = activityExtension;
+			_playtimeInsightsExtension = playtimeInsightsExtension;
 			_dateTimeProvider = dateTimeProvider;
 		}
 
@@ -37,7 +41,14 @@ namespace YearInReview.Validation
 		{
 			var errors = new List<InitValidationError>();
 
-			ValidateGameActivityExtensionInstalled(errors);
+			// PlaytimeInsights data alone is enough to generate reports,
+			// so GameActivity only becomes mandatory when no PlaytimeInsights data exists.
+			var playtimeInsightsDataAvailable = _playtimeInsightsExtension.IsDataAvailable();
+			if (!playtimeInsightsDataAvailable)
+			{
+				ValidateGameActivityExtensionInstalled(errors);
+			}
+
 			ValidateUsernameSet(errors);
 
 			if (errors.All(x => x.Id != InitValidationError.GameActivityExtensionNotInstalled))
@@ -91,10 +102,10 @@ namespace YearInReview.Validation
 
 			var currentYear = _dateTimeProvider.GetNow().Year;
 			var games = _playniteApi.Database.Games;
-			var activities = await _gameActivityExtension.GetActivityForGames(games);
+			var activities = await _activityExtension.GetActivityForGames(games);
 			if (!activities.Any())
 			{
-				_logger.Warn("No GameActivity sessions found. Cannot run YearInReview.");
+				_logger.Warn("No game sessions found. Cannot run YearInReview.");
 				var message = ResourceProvider.GetString("LOC_YearInReview_Notification_NoActivityAtAll");
 				errors.Add(new InitValidationError()
 				{
@@ -108,7 +119,7 @@ namespace YearInReview.Validation
 			if (activities.All(x => x.Items.All(session => session.DateSession.Year >= currentYear))
 			    && !settings.ShowCurrentYearReport)
 			{
-				_logger.Warn("No GameActivity sessions found for previous years. Cannot run YearInReview.");
+				_logger.Warn("No game sessions found for previous years. Cannot run YearInReview.");
 
 				var message = ResourceProvider.GetString("LOC_YearInReview_Notification_NoActivityInPreviousYears");
 				errors.Add(new InitValidationError()

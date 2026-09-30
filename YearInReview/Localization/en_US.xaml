@@ -18,9 +18,9 @@
     <sys:String x:Key="LOC_YearInReview_Notification_ImportError">An error occurred while trying to import the report. See extensions.log for more details.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ImportError_AlreadyExists">Report you are trying to import is already in Playnite. Skipping.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ImportError_InvalidFile">Trying to import invalid report file. Please double-check that you're importing file exported with YearInReview extension.</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Notification_InstallGameActivity">GameActivity extension not installed. It is mandatory for YearInReview extension to work.</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Notification_NoActivityAtAll">No GameActivity sessions found. Cannot generate any reports. Keep on playing! :)</sys:String>
-    <sys:String x:Key="LOC_YearInReview_Notification_NoActivityInPreviousYears">No GameActivity sessions found in previous years. Consider enabling current year report generation in settings. Or keep on playing and wait for the New Year! :)</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_InstallGameActivity">GameActivity extension not installed and no PlaytimeInsights data found. At least one of them is required for YearInReview to work.</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_NoActivityAtAll">No GameActivity or PlaytimeInsights sessions found. Cannot generate any reports. Keep on playing! :)</sys:String>
+    <sys:String x:Key="LOC_YearInReview_Notification_NoActivityInPreviousYears">No GameActivity or PlaytimeInsights sessions found in previous years. Consider enabling current year report generation in settings. Or keep on playing and wait for the New Year! :)</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ReportGenerated">Report generated for year {0}</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_ReportRegenerationError">Failed to regenerate report. See extensions.log for more details.</sys:String>
     <sys:String x:Key="LOC_YearInReview_Notification_SetUsername">Please set your username in the Year In Review plugin settings.</sys:String>

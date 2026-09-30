@@ -8,6 +8,7 @@ namespace YearInReview.Extensions.GameActivity
 	public class Session : ObservableObject
 	{
 		private Guid _sourceId = default;
+		private string _sourceName = string.Empty;
 		private Guid _platformId = default;
 		private List<Guid> _platformIDs = new List<Guid>();
 		private int _idConfiguration = 0;
@@ -15,6 +16,13 @@ namespace YearInReview.Extensions.GameActivity
 		private int _elapsedSeconds = 0;
 
 		public Guid SourceId { get => _sourceId; set => SetValue(ref _sourceId, value); }
+
+		/// <summary>
+		/// Fallback source name used when the session comes from an external source (e.g. PlaytimeInsights)
+		/// that stores sources by name instead of a Playnite database id.
+		/// </summary>
+		public string SourceName { get => _sourceName; set => SetValue(ref _sourceName, value); }
+
 		public Guid PlatfromId { get => _platformId; set => SetValue(ref _platformId, value); }
 		public List<Guid> PlatformIDs { get => _platformIDs; set => SetValue(ref _platformIDs, value); }
 		public int IdConfiguration { get => _idConfiguration; set => SetValue(ref _idConfiguration, value); }

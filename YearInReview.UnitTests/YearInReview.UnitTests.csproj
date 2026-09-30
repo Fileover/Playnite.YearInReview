@@ -104,6 +104,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\Services\NavigatorTests.cs" />
+    <Compile Include="Extensions\Composite\CompositeActivityExtensionTests.cs" />
+    <Compile Include="Extensions\PlaytimeInsights\PlaytimeInsightsExtensionTests.cs" />
     <Compile Include="Model\Filters\EmptyActivityFilterTests.cs" />
     <Compile Include="Settings\Old\SettingsV0Tests.cs" />
     <Compile Include="Settings\SettingsMigratorTests.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="Model\Aggregators\MetadataProviderTests.cs" />
     <Compile Include="Model\Aggregators\MostPlayedGameAggregatorTests.cs" />
     <Compile Include="Model\Aggregators\MostPlayedSourceAggregatorTests.cs" />
+    <Compile Include="Model\Aggregators\MostPlayedSourcesAggregatorNameTests.cs" />
     <Compile Include="Model\Aggregators\PlaytimeCalendarAggregatorTests.cs" />
     <Compile Include="Model\Aggregators\TotalPlaytimeAggregatorTests.cs" />
     <Compile Include="Model\Filters\SpecificYearActivityFilterTests.cs" />
@@ -127,6 +130,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Extensions\PlaytimeInsights\TestData\PlaytimeInsightsSampleSessions.json">
+      <LogicalName>PlaytimeInsightsSampleSessions.json</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\xunit.analyzers.1.16.0\analyzers\dotnet\cs\xunit.analyzers.dll" />

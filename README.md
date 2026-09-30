@@ -5,14 +5,15 @@
 
 
 ## What is it?
-Celebrate your last year of play by reviewing some of the play statistics from Playnite GameActivity plugin!
+Celebrate your last year of play by reviewing some of the play statistics from your Playnite game sessions!
 
 ![Main YearInReview view](/ci/screenshots/01.png)
 
 ## Requirements
 * You will need to set you user name in the settings;
-* ⚠ GameActivity extensions is mandatory! YearInReview uses GameActivity play sessions to generate a report. Download and install the extension from Playnite Add-On browser or here: https://playnite.link/addons.html#playnite-gameactivity-plugin;
-* You will need to have GameActivity data from previous years to see any reports.
+* ⚠ You need session data from **GameActivity** (mandatory for most setups, install it from the Playnite Add-On browser or here: https://playnite.link/addons.html#playnite-gameactivity-plugin) **or** from the [Playtime Insights](https://github.com/SHINKU1506/PlaytimeInsights) extension;
+* GameActivity and Playtime Insights data are merged: sessions tracked by Playtime Insights win for days it covers, while GameActivity fills in everything else;
+* You will need to have session data from previous years to see any reports.
 
 ## Sharing with friends
 You can share your report with friends. To share:
