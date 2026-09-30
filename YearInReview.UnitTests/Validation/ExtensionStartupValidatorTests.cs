@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+using AutoFixture;
 using AutoFixture.AutoFakeItEasy;
 using FakeItEasy;
 using Playnite.SDK;
@@ -204,7 +204,7 @@ namespace YearInReview.UnitTests.Validation
 
 		private void SetupGameActivitiesForYear(List<Activity> activities, int activitiesYear, int currentYear)
 		{
-			activities.ForEach(x => x.Items.ForEach(y => y.DateSession = new DateTime(activitiesYear, y.DateSession.Month, y.DateSession.Day)));
+			activities.ForEach(x => x.Items.ForEach(y => y.DateSession = new DateTime(activitiesYear, 1, 1)));
 			A.CallTo(() => _gameActivityExtension.GetActivityForGames(An<IEnumerable<Game>>._)).Returns(activities);
 			A.CallTo(() => _dateTimeProvider.GetNow()).Returns(new DateTime(currentYear, 1, 1));
 		}
