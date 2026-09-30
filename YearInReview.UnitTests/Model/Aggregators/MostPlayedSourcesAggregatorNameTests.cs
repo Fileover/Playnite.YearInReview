@@ -47,10 +47,10 @@ namespace YearInReview.UnitTests.Model.Aggregators
 
 			// Assert
 			Assert.Equal(2, result.Count);
-			Assert.Equal("Steam", result[0].Source.Name);
-			Assert.Equal(1800, result[0].TimePlayed);
-			Assert.Equal("Epic", result[1].Source.Name);
-			Assert.Equal(60, result[1].TimePlayed);
+			Assert.Equal("Steam", result.First().Source.Name);
+			Assert.Equal(1800, result.First().TimePlayed);
+			Assert.Equal("Epic", result.Last().Source.Name);
+			Assert.Equal(60, result.Last().TimePlayed);
 		}
 
 		[Fact]

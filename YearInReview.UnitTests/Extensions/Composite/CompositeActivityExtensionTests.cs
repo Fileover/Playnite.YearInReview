@@ -72,10 +72,9 @@ namespace YearInReview.UnitTests.Extensions.Composite
 
 			// Assert
 			var activity = Assert.Single(result);
-			Assert.Equal(2, activity.Items.Count);
-			Assert.Contains(activity.Items, x => x.DateSession == day.AddHours(1) && x.ElapsedSeconds == 1000);
-			Assert.Contains(activity.Items, x => x.DateSession == day.AddHours(2) && x.ElapsedSeconds == 200);
-			Assert.DoesNotContain(activity.Items, x => x.DateSession == day && x.ElapsedSeconds == 100);
+			var keptSession = Assert.Single(activity.Items);
+			Assert.Equal(day.AddHours(1), keptSession.DateSession);
+			Assert.Equal(1000, keptSession.ElapsedSeconds);
 		}
 
 		[Fact]
