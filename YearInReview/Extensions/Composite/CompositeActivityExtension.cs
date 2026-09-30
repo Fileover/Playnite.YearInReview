@@ -45,18 +45,31 @@ namespace YearInReview.Extensions.Composite
 			var mergedGameIds = new HashSet<Guid>();
 
 			var insightsByGameId = playtimeInsightsActivities.ToDictionary(x => x.Id);
-			foreach (var gameActivity in gameActivityActivities)
+			foreach (var gameActivityGroup in gameActivityActivities.GroupBy(x => x.Id))
 			{
-				if (!insightsByGameId.TryGetValue(gameActivity.Id, out var insightsActivity))
+				var gameId = gameActivityGroup.Key;
+				var allGameActivitySessions = gameActivityGroup
+					.SelectMany(x => x.Items)
+					.ToList();
+				var gameActivityName = gameActivityGroup
+					.Select(x => x.Name)
+					.FirstOrDefault(x => !string.IsNullOrEmpty(x));
+
+				if (!insightsByGameId.TryGetValue(gameId, out var insightsActivity))
 				{
-					mergedActivities.Add(gameActivity);
-					mergedGameIds.Add(gameActivity.Id);
+					mergedActivities.Add(new Activity
+					{
+						Id = gameId,
+						Name = gameActivityName,
+						Items = allGameActivitySessions
+					});
+					mergedGameIds.Add(gameId);
 					continue;
 				}
 
 				var daysWithInsights = new HashSet<DateTime>(
 					insightsActivity.Items.Select(x => x.DateSession.Date));
-				var gameActivitySessions = gameActivity.Items
+				var gameActivitySessions = allGameActivitySessions
 					.Where(x => !daysWithInsights.Contains(x.DateSession.Date))
 					.ToList();
 
@@ -66,11 +79,11 @@ namespace YearInReview.Extensions.Composite
 
 				mergedActivities.Add(new Activity
 				{
-					Id = gameActivity.Id,
-					Name = FirstNonEmpty(gameActivity.Name, insightsActivity.Name),
+					Id = gameId,
+					Name = FirstNonEmpty(gameActivityName, insightsActivity.Name),
 					Items = items
 				});
-				mergedGameIds.Add(gameActivity.Id);
+				mergedGameIds.Add(gameId);
 			}
 
 			mergedActivities.AddRange(playtimeInsightsActivities

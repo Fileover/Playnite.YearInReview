@@ -1,4 +1,4 @@
-﻿using Playnite.SDK;
+using Playnite.SDK;
 using Playnite.SDK.Models;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace YearInReview.Model.Aggregators
 		public IReadOnlyCollection<SourceWithTime> GetMostPlayedSources(IReadOnlyCollection<Activity> activities)
 		{
 			return activities.SelectMany(x => x.Items)
-				.GroupBy(x => x.SourceId != Guid.Empty ? (object)x.SourceId : $"name:{x.SourceName ?? string.Empty}")
+				.GroupBy(GetSourceGroupKey)
 				.Select(x => new SourceWithTime
 				{
 					Source = ResolveSource(x),
@@ -31,6 +31,20 @@ namespace YearInReview.Model.Aggregators
 				.ToList();
 		}
 
+		private static object GetSourceGroupKey(Session session)
+		{
+			if (session.SourceId != Guid.Empty)
+			{
+				return session.SourceId;
+			}
+
+			// Sessions without a source id and without a source name are treated as
+			// played directly through Playnite, keeping the pre-existing behavior.
+			return string.IsNullOrEmpty(session.SourceName)
+				? (object)Guid.Empty
+				: $"name:{session.SourceName}";
+		}
+
 		private GameSource ResolveSource(IGrouping<object, Session> sessions)
 		{
 			var sourceId = sessions.Key as Guid?;
@@ -39,7 +53,7 @@ namespace YearInReview.Model.Aggregators
 				return new GameSource
 				{
 					Id = Guid.Empty,
-					Name = GetFirstSourceName(sessions) ?? "Playnite",
+					Name = "Playnite",
 				};
 			}
 
