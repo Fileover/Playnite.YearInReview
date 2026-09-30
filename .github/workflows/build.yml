@@ -1,0 +1,54 @@
+name: Build Extension
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+env:
+  SOLUTION_NAME: YearInReview
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4.1.2
+
+    - name: Setup Nuget.exe
+      uses: nuget/setup-nuget@v2
+
+    - name: Restore packages
+      run: nuget restore ${{ env.SOLUTION_NAME }}.sln
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build with MSBuild
+      run: msbuild ${{ env.SOLUTION_NAME }}.sln -p:Configuration=Release
+
+    - name: Read extension version
+      id: version
+      run: |
+        $versionLine = Select-String -Path "${{ env.SOLUTION_NAME }}\extension.yaml" -Pattern '^Version:\s*(.+)$'
+        $version = $versionLine.Matches[0].Groups[1].Value.Trim()
+        Write-Output "version=$version" >> $env:GITHUB_OUTPUT
+        Write-Output "Extension version: $version"
+
+    - name: Download Playnite Toolbox
+      run: |
+        New-Item -ItemType Directory -Force -Path "toolbox" | Out-Null
+        Invoke-WebRequest -Uri "https://api.playnite.link/download/toolbox/6.16/Toolbox.exe" -OutFile "toolbox/Toolbox.exe"
+
+    - name: Pack extension (.pext)
+      run: |
+        & toolbox\Toolbox.exe pack "${{ env.SOLUTION_NAME }}\bin\Release" "dist"
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        Get-ChildItem dist
+
+    - name: Upload extension artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.SOLUTION_NAME }}-v${{ steps.version.outputs.version }}
+        path: dist/*.pext
+        if-no-files-found: error
