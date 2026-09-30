@@ -35,14 +35,18 @@ jobs:
         Write-Output "version=$version" >> $env:GITHUB_OUTPUT
         Write-Output "Extension version: $version"
 
-    - name: Download Playnite Toolbox
-      run: |
-        New-Item -ItemType Directory -Force -Path "toolbox" | Out-Null
-        Invoke-WebRequest -Uri "https://api.playnite.link/download/toolbox/6.16/Toolbox.exe" -OutFile "toolbox/Toolbox.exe"
+    - name: Download Playnite with Toolbox
+      uses: robinraju/release-downloader@v1.8
+      with:
+        repository: "JosefNemec/Playnite"
+        tag: "10.5"
+        fileName: "Playnite*.zip"
+        out-file-path: "playnite"
+        extract: true
 
     - name: Pack extension (.pext)
       run: |
-        & toolbox\Toolbox.exe pack "${{ env.SOLUTION_NAME }}\bin\Release" "dist"
+        & playnite\Toolbox.exe pack "${{ env.SOLUTION_NAME }}\bin\Release" "dist"
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         Get-ChildItem dist
 
